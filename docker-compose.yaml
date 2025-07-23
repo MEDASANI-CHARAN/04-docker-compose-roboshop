@@ -37,9 +37,23 @@ services:
       - mysql
       - cart
   rabbitmq:
-    image: charan466/rabbitmq:v1
+    image: charan466/rabbitmq:v1 # image: rabbitmq:3 => we can pull the image directly from docker hub
     container_name: rabbitmq
     environment:
       RABBIMQ_DEFAULT_USER: roboshop
       RABBIMQ_DEFAULT_PASS: roboshop123
-  
+  payment:
+    image: charan466/payment:v1
+    container_name: payment
+    environment:
+      CART_HOST: cart
+      CART_PORT: "8080"
+      USER_HOST: user
+      USER_PORT: "8080"
+      AMQP_HOST: rabbitmq
+      AMQP_PORT: "8080"
+      AMQP_USER: roboshop
+      AMQP_PASS: roboshop123
+    depends_on:
+      - rabbitmq
+      - cart  
